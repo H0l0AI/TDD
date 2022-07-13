@@ -1,15 +1,19 @@
 // #1 first function to be created, small validator function for testing input is valid.
 //obviously you could extend this validator to cover as many cases as you want or even use a third party library like formik
 
-export const validateSignUp=(email,password)=>{
+export const invalidateSignUp=(email,password,passwordConfirm)=>{
     if(!email||!password){
-        return false
+        return 'Must enter a valid email address and password'
     }
-    else if(password.length<8){
-        return false
+    else if(!password.match('^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$')){
+        return `Password must have at least one capital letter, one numeric character, and one
+special character.`
+    }
+    else if(passwordConfirm!==password){
+        return 'Passwords must match';
     }
     else{
-        return true;
+        return false;
     }
 }
 export const mockSignUpEndpointRequest = ()=>{

@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import {mockSignUpEndpointRequest, validateSignUp} from "./signupUtils";
+import {invalidateSignUp, mockSignUpEndpointRequest,} from "./signupUtils";
 
 export default class SignUpForm extends Component{
     constructor(props) {
@@ -8,6 +8,7 @@ export default class SignUpForm extends Component{
             emailFormFields:{
                 emailSignIn:'',
                 passwordSignIn:'',
+                passwordConfirm:'',
             },
             success:false,
         }
@@ -23,8 +24,8 @@ export default class SignUpForm extends Component{
     };
 
 
-    signUpHandler=(email,password)=>{
-        if(validateSignUp(email,password)){
+    signUpHandler=(email,password,passwordConfirm)=>{
+        if(!invalidateSignUp(email,password,passwordConfirm)){
             //completeSignUp
             mockSignUpEndpointRequest().then((res)=>{
                 this.setState({success:'Created account and logging you in ... please wait.'})
@@ -32,7 +33,7 @@ export default class SignUpForm extends Component{
                 this.setState({signUpError:'Some error occured.'})
             });
         }else{
-            this.setState({signUpError:'Both a valid username and password are required to create an account'})
+            this.setState({signUpError:invalidateSignUp(email,password,passwordConfirm)})
         }
 
     }
@@ -54,13 +55,6 @@ export default class SignUpForm extends Component{
                         placeholder="Your email address"
                         className="signup-form"
                         onChange={this.handleSignInFormChange}
-                        onKeyPress={(event) => {
-                            if (event.key === 'Enter') {
-                                event.preventDefault();
-                                event.stopPropagation();
-                                this.signUpHandler(this.state.emailFormFields.emailSignIn, this.state.emailFormFields.passwordSignIn).bind(this);
-                            }
-                        }}
 
                     />
 
@@ -77,13 +71,20 @@ export default class SignUpForm extends Component{
                         placeholder="Your password"
                         className="signup-form"
                         onChange={this.handleSignInFormChange}
-                        onKeyPress={(event) => {
-                            if (event.key === 'Enter') {
-                                event.preventDefault();
-                                event.stopPropagation();
-                                this.signUpHandler(this.state.emailFormFields.emailSignIn, this.state.emailFormFields.passwordSignIn);
-                            }
-                        }}
+                    />
+
+                    <div style={{position:'relative'}}>
+                        <div style={{position:'absolute',fontSize:14,fontWeight:700,paddingTop:15,marginLeft:18}}>Password</div>
+                    </div>
+                    <input
+                        style={{ width: 250 ,border:'1px solid #C3C4C9',borderRadius:4}}
+                        type="password"
+                        name="passwordConfirm"
+                        id="passwordConfirm"
+                        value={this.state.emailFormFields.passwordConfirm}
+                        placeholder="Confirm password"
+                        className="signup-form"
+                        onChange={this.handleSignInFormChange}
                     />
 
                     <div style={{ position: 'relative' }}>
@@ -100,7 +101,7 @@ export default class SignUpForm extends Component{
                             className="signInButton"
                             style={{ marginLeft: 80 ,position:'absolute',top:40,left:180}}
                             onClick={() => {
-                                this.signUpHandler(this.state.emailFormFields.emailSignIn, this.state.emailFormFields.passwordSignIn);
+                                this.signUpHandler(this.state.emailFormFields.emailSignIn, this.state.emailFormFields.passwordSignIn,this.state.emailFormFields.passwordConfirm);
                             }}
                         >
                             Sign Up

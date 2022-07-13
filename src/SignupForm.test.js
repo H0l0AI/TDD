@@ -1,13 +1,13 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
-import {mockSignUpEndpointRequest, signUpHandler, validateSignUp} from "./signupUtils";
+import {mockSignUpEndpointRequest, signUpHandler, invalidateSignUp} from "./signupUtils";
 import {fireEvent, waitFor} from "@testing-library/dom";
 //#1 test validator
 test('empty email and password do not create account', () => {
-    expect(validateSignUp(null,null)).toEqual(false);
+    expect(invalidateSignUp(null,null)).not.toEqual(false);
 });
 test('empty email and too-short password do not create account successfully', () => {
-    expect(validateSignUp('valid@example.com','abc')).toEqual(false);
+    expect(invalidateSignUp('valid@example.com','abc')).not.toEqual(false);
 });
 //#2 create field and button components with no other methods
 test('expect screen to render all components', () => {
@@ -60,6 +60,9 @@ test('and expect valid input to not render error message but rather complete sig
     const inputPasswordElement = screen.getByPlaceholderText(/Your password/i);
     fireEvent.change(inputPasswordElement, {target: {value: 'veryValid123@'}})
     expect(inputPasswordElement.value).toBe('veryValid123@')
+    const confirmPasswordElement = screen.getByPlaceholderText(/Confirm password/i);
+    fireEvent.change(confirmPasswordElement, {target: {value: 'veryValid123@'}})
+    expect(confirmPasswordElement.value).toBe('veryValid123@')
     fireEvent(
         screen.getByText('Sign Up'),
         new MouseEvent('click', {
