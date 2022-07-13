@@ -36,3 +36,27 @@
     transform: rotate(360deg);
   }
 }
+.signInButton{
+  line-height: 50px !important;
+  height:52px !important;
+  width:170px !important;
+  font-size: 18px;
+  font-weight: 400;
+  background-color: #7d659b;
+  color:#fff;
+  cursor:pointer;
+  border-radius: 30px;
+  text-align: center;
+  outline: none !important;
+  border:none !important;
+}
+.signup-form {
+  margin:15px 0px 0px 15px !important;
+  min-width:400px;
+  max-width:425px !important;
+  border:1px solid #C3C4C9 !important;
+  border-radius: 4px !important;
+  padding-left: 10px !important;
+  box-shadow: 0 1px 0 0 #7d659b;
+  margin-top: 40px !important;
+}
