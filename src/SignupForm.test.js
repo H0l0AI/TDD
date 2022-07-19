@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
-import {mockSignUpEndpointRequest, signUpHandler, invalidateSignUp} from "./signupUtils";
+import {mockSignUpEndpointRequest, signUpHandler, invalidateSignUp, passwordMatch} from "./signupUtils";
 import {fireEvent, waitFor} from "@testing-library/dom";
 //#1 test validator
 test('empty email and password do not create account', () => {
@@ -51,7 +51,15 @@ test('expect invalid input to render error message', () => {
     const errorMessageElement=screen.queryByTestId('error-msg');
     expect(errorMessageElement).toBeInTheDocument();
 });
-
+test('Expect invalid passwords to fail password validation test',()=>{
+    let invalidPassword1='test';
+    let invalidPassword2='test123';
+    let invalidPassword3='test123@';
+    let invalidPassword4='Test123@';
+    let invalidPassword5='TheTest123@';
+    let passwordMatchResult=passwordMatch(invalidPassword);
+    expect(passwordMatchResult).not.toBe(true);
+})
 test('and expect valid input to not render error message but rather complete sign in', async() => {
     render(<App />);
     const inputEmailElement = screen.getByPlaceholderText('Your email address');
